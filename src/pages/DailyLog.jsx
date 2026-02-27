@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import { FOOD_DB, calculateNutrition, calculateTargets } from '../lib/nutrition'
+const foodItems = Object.keys(FOOD_DB)
 
 function Card({ children, style = {} }) {
   return <div style={{ background: '#1a1d27', border: '1px solid #2d3148', borderRadius: 16, padding: 20, ...style }}>{children}</div>
@@ -9,6 +10,7 @@ function Card({ children, style = {} }) {
 export default function DailyLog({ profile, user }) {
   const today = new Date().toISOString().split('T')[0]
   const [selectedDate, setSelectedDate] = useState(today)
+  const [selectedMeals, setSelectedMeals] = useState([]);
   const [budget, setBudget] = useState(profile?.budget || 100)
   const [meals, setMeals] = useState({ breakfast: [], lunch: [], dinner: [] })
   const [extraFoods, setExtraFoods] = useState([])
@@ -37,7 +39,23 @@ export default function DailyLog({ profile, user }) {
       setLogId(null)
     }
   }
+  const handleSelectMeal = (meal) => {
+  setSelectedMeals(prev => {
+    const alreadySelected = prev.find(item => item.id === meal.id);
 
+    if (alreadySelected) {
+      // remove if clicked again (toggle behavior)
+      return prev.filter(item => item.id !== meal.id);
+    }
+
+    return [...prev, meal];
+  });
+
+  useEffect(() => {
+  console.log("Currently Selected:", selectedMeals);
+}, [selectedMeals]);
+
+};
   const toggleMeal = (meal, item) => {
     setMeals(prev => {
       const items = prev[meal]
@@ -117,28 +135,61 @@ export default function DailyLog({ profile, user }) {
               ))}
             </div>
 
-            {messMenu[activeTab]?.length > 0 ? (
-              messMenu[activeTab].map((item, i) => {
-                const isLogged = meals[activeTab]?.some(m => m.name === item)
-                const db = FOOD_DB[item] || {}
-                return (
-                  <button key={i} onClick={() => toggleMeal(activeTab, item)}
-                    style={{ width: '100%', background: isLogged ? '#4ade8022' : '#21253a', border: `2px solid ${isLogged ? '#4ade80' : '#2d3148'}`, borderRadius: 12, padding: '12px 14px', marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', transition: 'all 0.15s' }}>
-                    <div style={{ textAlign: 'left' }}>
-                      <div style={{ color: '#f1f5f9', fontWeight: 600 }}>{item}</div>
-                      <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>{db.cal} kcal • {db.protein}g protein • {db.carbs}g carbs</div>
-                    </div>
-                    <div style={{ width: 28, height: 28, borderRadius: 99, background: isLogged ? '#4ade80' : '#2d3148', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isLogged ? '#000' : '#94a3b8', fontWeight: 800, flexShrink: 0, fontSize: 14 }}>
-                      {isLogged ? '✓' : '+'}
-                    </div>
-                  </button>
-                )
-              })
-            ) : (
-              <div style={{ color: '#475569', fontSize: 13, textAlign: 'center', padding: 24 }}>
-                No {activeTab} items set. Go to profile to update your mess menu.
-              </div>
-            )}
+            {Object.keys(FOOD_DB)
+                  .filter(food =>
+                    FOOD_DB[food]?.meal === activeTab ||
+                    FOOD_DB[food]?.meal === "snack"
+                  ).map((item, i) => {
+                  const isLogged = meals[activeTab]?.some(m => m.name === item)
+                  const db = FOOD_DB[item] || {}
+
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => toggleMeal(activeTab, item)}
+                      style={{
+                        width: '100%',
+                        background: isLogged ? '#4ade8022' : '#21253a',
+                        border: `2px solid ${isLogged ? '#4ade80' : '#2d3148'}`,
+                        borderRadius: 12,
+                        padding: '12px 14px',
+                        marginBottom: 8,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s'
+                      }}
+                    >
+                      <div style={{ textAlign: 'left' }}>
+                        <div style={{ color: '#f1f5f9', fontWeight: 600 }}>
+                          {item}
+                        </div>
+                        <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>
+                          {db.cal} kcal • {db.protein}g protein • {db.carbs}g carbs
+                        </div>
+                      </div>
+
+                      <div
+                        style={{
+                          width: 28,
+                          height: 28,
+                          borderRadius: 99,
+                          background: isLogged ? '#4ade80' : '#2d3148',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: isLogged ? '#000' : '#94a3b8',
+                          fontWeight: 800,
+                          flexShrink: 0,
+                          fontSize: 14
+                        }}
+                      >
+                        {isLogged ? '✓' : '+'}
+                      </div>
+                    </button>
+                  )
+                })}
           </Card>
 
           {/* Extra food */}

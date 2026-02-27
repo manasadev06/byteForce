@@ -142,7 +142,7 @@ export default function Onboarding({ user, onComplete }) {
           )}
 
           {/* Step 3 — Mess Menu */}
-          {step === 3 && (
+          {/* {step === 3 && (
             <div>
               <div style={{ color: '#94a3b8', fontSize: 13, marginBottom: 16 }}>Select dishes available in your hostel mess for each meal</div>
               {['breakfast', 'lunch', 'dinner'].map(meal => (
@@ -164,7 +164,7 @@ export default function Onboarding({ user, onComplete }) {
                 </div>
               ))}
             </div>
-          )}
+          )} */}
         </div>
 
         {/* Buttons */}
