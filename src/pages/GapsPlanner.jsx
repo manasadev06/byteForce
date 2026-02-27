@@ -38,49 +38,48 @@ export default function GapsPlanner({ profile, user }) {
   }
 
   const generate = async () => {
-    setPlanState('loading'); setErrorMsg('')
-    try {
-      const payload = {
-        name: profile?.name,
-        diet: profile?.diet,
-        goal: profile?.goal,
-        has_pcos: profile?.has_pcos,
-        goes_to_gym: profile?.goes_to_gym,
-        caloriesEaten: cal,
-        caloriesTarget: targets.calories,
-        caloriesNeeded: gaps.calories,
-        proteinEaten: protein,
-        proteinTarget: targets.protein,
-        proteinNeeded: gaps.protein,
-        carbsNeeded: gaps.carbs,
-        budgetRemaining: gaps.budgetLeft,
-        allergies: profile?.allergies || [],
-      }
+  setPlanState('loading')
+  setErrorMsg('')
 
-      const res = await fetch(N8N_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-
-      const text = await res.text()
-      let parsed
-      try {
-        parsed = JSON.parse(text)
-      } catch {
-        const match = text.match(/\[[\s\S]*\]/)
-        if (match) parsed = JSON.parse(match[0])
-        else throw new Error('Could not parse AI response')
-      }
-
-      const meals = Array.isArray(parsed) ? parsed : parsed.meals || parsed.plan || []
-      setPlan(meals)
-      setPlanState('done')
-    } catch (e) {
-      setErrorMsg('Could not connect to AI. Check your n8n webhook URL.')
-      setPlanState('error')
+  try {
+    const payload = {
+      name: profile?.name,
+      diet: profile?.diet,
+      goal: profile?.goal,
+      has_pcos: profile?.has_pcos,
+      goes_to_gym: profile?.goes_to_gym,
+      caloriesEaten: cal,
+      caloriesTarget: targets.calories,
+      caloriesNeeded: gaps.calories,
+      proteinEaten: protein,
+      proteinTarget: targets.protein,
+      proteinNeeded: gaps.protein,
+      carbsNeeded: gaps.carbs,
+      budgetRemaining: gaps.budgetLeft,
+      allergies: profile?.allergies || [],
     }
+
+    const res = await fetch("http://localhost:5678/webhook/nutrition-plan", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+
+    const data = await res.json()
+
+    console.log("FULL RESPONSE:", data)
+
+    // 🔥 THIS IS THE IMPORTANT LINE
+    setPlan(data.items)
+
+    setPlanState('done')
+
+  } catch (err) {
+    console.error(err)
+    setErrorMsg("Something went wrong")
+    setPlanState('error')
   }
+}
 
   return (
     <div style={{ padding: '28px 32px', fontFamily: "'DM Sans', sans-serif", overflowY: 'auto', height: '100vh', background: '#0f1117' }}>
@@ -162,7 +161,7 @@ export default function GapsPlanner({ profile, user }) {
             </Card>
           )}
 
-          {planState === 'done' && plan.length > 0 && (
+          {planState === 'done' && (
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
                 <div style={{ width: 8, height: 8, borderRadius: 99, background: '#4ade80' }} />
@@ -183,7 +182,7 @@ export default function GapsPlanner({ profile, user }) {
                     {item.calories && <span style={{ fontSize: 12, color: '#60a5fa' }}>{item.calories} kcal</span>}
                     {item.protein && <span style={{ fontSize: 12, color: '#4ade80' }}>{item.protein}g protein</span>}
                     {item.carbs && <span style={{ fontSize: 12, color: '#fb923c' }}>{item.carbs}g carbs</span>}
-                    {item.cost && <span style={{ marginLeft: 'auto', color: '#facc15', fontWeight: 700 }}>₹{item.cost}</span>}
+                    {item.price && <span style={{ marginLeft: 'auto', color: '#facc15', fontWeight: 700 }}>₹{item.price}</span>}
                   </div>
                 </Card>
               ))}
@@ -193,7 +192,7 @@ export default function GapsPlanner({ profile, user }) {
                 <div style={{ fontSize: 13, color: '#f1f5f9', marginTop: 4 }}>
                   {plan.reduce((s, p) => s + (p.calories || 0), 0)} kcal •{' '}
                   {plan.reduce((s, p) => s + (p.protein || 0), 0)}g protein •{' '}
-                  Total ₹{plan.reduce((s, p) => s + (p.cost || 0), 0)}
+                  Total ₹{plan.reduce((s, p) => s + (p.price || 0), 0)}
                 </div>
               </Card>
 
