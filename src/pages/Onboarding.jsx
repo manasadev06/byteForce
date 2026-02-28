@@ -34,50 +34,49 @@ export default function Onboarding({ user, onComplete }) {
     setLoading(false)
   }
 
-  const inputStyle = { width: '100%', background: '#21253a', border: '1px solid #2d3148', borderRadius: 10, padding: '11px 14px', color: '#f1f5f9', fontSize: 15, outline: 'none', boxSizing: 'border-box' }
-  const labelStyle = { color: '#94a3b8', fontSize: 13, marginBottom: 6, display: 'block' }
-  const cardBtnStyle = (active, color = '#4ade80') => ({
-    display: 'flex', alignItems: 'center', gap: 12, background: active ? `${color}22` : '#21253a',
-    border: `2px solid ${active ? color : 'transparent'}`, borderRadius: 12, padding: '13px 16px',
-    cursor: 'pointer', color: '#f1f5f9', textAlign: 'left', width: '100%', marginBottom: 8
+  const inputStyle = { width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)', borderRadius: 12, padding: '14px 16px', color: 'var(--text-primary)', fontSize: 15, outline: 'none', boxSizing: 'border-box', transition: 'all 0.2s' }
+  const labelStyle = { color: 'var(--text-muted)', fontSize: 13, marginBottom: 8, display: 'block', fontWeight: 600 }
+  const cardBtnStyle = (active, color = 'var(--accent-green)') => ({
+    display: 'flex', alignItems: 'center', gap: 12, background: active ? 'rgba(74, 222, 128, 0.1)' : 'rgba(255,255,255,0.03)',
+    border: `2px solid ${active ? 'var(--accent-green)' : 'transparent'}`, borderRadius: 14, padding: '16px',
+    cursor: 'pointer', color: 'var(--text-primary)', textAlign: 'left', width: '100%', marginBottom: 12, transition: 'all 0.2s', fontWeight: active ? 700 : 500
   })
 
   const foodItems = Object.keys(FOOD_DB)
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0f1117', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'DM Sans', sans-serif", padding: 24 }}>
-      <div style={{ width: '100%', maxWidth: 520 }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+      <div style={{ width: '100%', maxWidth: 560 }}>
         {/* Progress */}
-        <div style={{ marginBottom: 28 }}>
-          <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
-            {steps.map((_, i) => <div key={i} style={{ flex: 1, height: 4, borderRadius: 99, background: i <= step ? '#4ade80' : '#2d3148', transition: 'background 0.3s' }} />)}
+        <div style={{ marginBottom: 40 }}>
+          <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+            {steps.map((_, i) => <div key={i} style={{ flex: 1, height: 6, borderRadius: 99, background: i <= step ? 'var(--accent-green)' : 'var(--border-color)', transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }} />)}
           </div>
-          <div style={{ color: '#94a3b8', fontSize: 13 }}>Step {step + 1} of {steps.length}</div>
-          <div style={{ fontSize: 22, fontWeight: 800, color: '#f1f5f9', marginTop: 2 }}>{steps[step]}</div>
+          <div style={{ color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, letterSpacing: '0.05em' }}>STEP {step + 1} OF {steps.length}</div>
+          <div style={{ fontSize: 28, fontWeight: 900, color: 'var(--text-primary)', marginTop: 8 }}>{steps[step]}</div>
         </div>
 
-        <div style={{ background: '#1a1d27', border: '1px solid #2d3148', borderRadius: 20, padding: 28 }}>
-          {error && <div style={{ background: '#f8717122', borderRadius: 10, padding: '10px 14px', color: '#f87171', fontSize: 13, marginBottom: 16 }}>{error}</div>}
+        <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: 24, padding: '40px', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2)' }}>
+          {error && <div style={{ background: 'rgba(248, 113, 113, 0.1)', border: '1px solid #f87171', borderRadius: 12, padding: '12px 16px', color: '#f87171', fontSize: 14, marginBottom: 24, fontWeight: 600 }}>{error}</div>}
 
           {/* Step 0 — Personal Info */}
           {step === 0 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               <div>
-                <label style={labelStyle}>Full Name</label>
+                <label style={labelStyle}>FULL NAME</label>
                 <input style={inputStyle} placeholder="Your name" value={form.name} onChange={e => set('name', e.target.value)} />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <div><label style={labelStyle}>Age</label><input style={inputStyle} type="number" placeholder="20" value={form.age} onChange={e => set('age', e.target.value)} /></div>
-                <div><label style={labelStyle}>Weight (kg)</label><input style={inputStyle} type="number" placeholder="60" value={form.weight} onChange={e => set('weight', e.target.value)} /></div>
-                <div><label style={labelStyle}>Height (cm)</label><input style={inputStyle} type="number" placeholder="165" value={form.height} onChange={e => set('height', e.target.value)} /></div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr', gap: 12 }}>
+                <div><label style={labelStyle}>AGE</label><input style={inputStyle} type="number" placeholder="20" value={form.age} onChange={e => set('age', e.target.value)} /></div>
+                <div><label style={labelStyle}>WEIGHT (KG)</label><input style={inputStyle} type="number" placeholder="60" value={form.weight} onChange={e => set('weight', e.target.value)} /></div>
+                <div><label style={labelStyle}>HEIGHT (CM)</label><input style={inputStyle} type="number" placeholder="165" value={form.height} onChange={e => set('height', e.target.value)} /></div>
               </div>
               <div>
-                <label style={labelStyle}>Gender</label>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                <label style={labelStyle}>GENDER</label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
                   {[['male', '👦', 'Male'], ['female', '👧', 'Female'], ['other', '🧑', 'Other']].map(([v, e, l]) => (
                     <button key={v} onClick={() => set('gender', v)} style={cardBtnStyle(form.gender === v)}>
-                      <span style={{ fontSize: 20 }}>{e}</span> {l}
-                      {form.gender === v && <span style={{ marginLeft: 'auto', color: '#4ade80' }}>✓</span>}
+                      <span style={{ fontSize: 22 }}>{e}</span> {l}
                     </button>
                   ))}
                 </div>
@@ -88,31 +87,50 @@ export default function Onboarding({ user, onComplete }) {
           {/* Step 1 — Health Goals */}
           {step === 1 && (
             <div>
-              <label style={labelStyle}>Health Goal</label>
-              {[['muscle', '💪', 'Build Muscle', 'High protein focus'], ['lose', '🔥', 'Lose Weight', 'Calorie deficit plan'], ['healthy', '🌟', 'Stay Healthy', 'Balanced nutrition'], ['energy', '⚡', 'Boost Energy', 'Carb + iron focus']].map(([v, e, l, s]) => (
-                <button key={v} onClick={() => set('goal', v)} style={cardBtnStyle(form.goal === v, '#60a5fa')}>
-                  <span style={{ fontSize: 22 }}>{e}</span>
-                  <div><div style={{ fontWeight: 600 }}>{l}</div><div style={{ fontSize: 12, color: '#94a3b8' }}>{s}</div></div>
-                  {form.goal === v && <span style={{ marginLeft: 'auto', color: '#60a5fa' }}>✓</span>}
-                </button>
-              ))}
+              <label style={labelStyle}>WHAT'S YOUR PRIMARY GOAL?</label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {[['muscle', '💪', 'Build Muscle', 'Focus on high protein & progressive overload'], ['lose', '🔥', 'Lose Weight', 'Healthy calorie deficit & fat loss'], ['healthy', '🌟', 'Stay Healthy', 'Balanced macros for maintenance'], ['energy', '⚡', 'Boost Energy', 'Complex carbs & essential micronutrients']].map(([v, e, l, s]) => (
+                  <button key={v} onClick={() => set('goal', v)} style={cardBtnStyle(form.goal === v, '#60a5fa')}>
+                    <span style={{ fontSize: 24 }}>{e}</span>
+                    <div><div style={{ fontWeight: 800, fontSize: 16 }}>{l}</div><div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{s}</div></div>
+                    {form.goal === v && <span style={{ marginLeft: 'auto', color: '#60a5fa', fontWeight: 900 }}>✓</span>}
+                  </button>
+                ))}
+              </div>
 
-              <div style={{ marginTop: 16 }}>
-                <label style={labelStyle}>Lifestyle</label>
-                <button onClick={() => set('goes_to_gym', !form.goes_to_gym)} style={cardBtnStyle(form.goes_to_gym, '#fb923c')}>
-                  <span style={{ fontSize: 22 }}>🏋️</span>
-                  <div><div style={{ fontWeight: 600 }}>I go to the gym</div><div style={{ fontSize: 12, color: '#94a3b8' }}>Higher calorie & protein targets</div></div>
-                  {form.goes_to_gym && <span style={{ marginLeft: 'auto', color: '#fb923c' }}>✓</span>}
-                </button>
+              <div style={{ marginTop: 24, padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: 16, border: '1px solid var(--border-color)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <div style={{ fontWeight: 800, color: 'var(--text-primary)', fontSize: 15 }}>🏋️ Regular Exercise</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>Do you go to the gym 3+ times a week?</div>
+                  </div>
+                  <button onClick={() => set('goes_to_gym', !form.goes_to_gym)}
+                    style={{ 
+                      width: 48, height: 26, borderRadius: 99, 
+                      background: form.goes_to_gym ? 'var(--accent-green)' : 'rgba(255,255,255,0.1)', 
+                      border: 'none', position: 'relative', cursor: 'pointer', transition: 'all 0.2s' 
+                    }}>
+                    <div style={{ width: 18, height: 18, background: '#fff', borderRadius: 99, position: 'absolute', top: 4, left: form.goes_to_gym ? 26 : 4, transition: 'all 0.2s' }} />
+                  </button>
+                </div>
               </div>
 
               {form.gender === 'female' && (
-                <div style={{ marginTop: 8 }}>
-                  <button onClick={() => set('has_pcos', !form.has_pcos)} style={cardBtnStyle(form.has_pcos, '#a78bfa')}>
-                    <span style={{ fontSize: 22 }}>🩺</span>
-                    <div><div style={{ fontWeight: 600 }}>I have PCOS/PCOD</div><div style={{ fontSize: 12, color: '#94a3b8' }}>Adjusted nutrition recommendations</div></div>
-                    {form.has_pcos && <span style={{ marginLeft: 'auto', color: '#a78bfa' }}>✓</span>}
-                  </button>
+                <div style={{ marginTop: 12, padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: 16, border: '1px solid var(--border-color)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <div style={{ fontWeight: 800, color: 'var(--text-primary)', fontSize: 15 }}>🩺 PCOS/PCOD Aware</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>Tailored nutrition for hormone balance</div>
+                    </div>
+                    <button onClick={() => set('has_pcos', !form.has_pcos)}
+                      style={{ 
+                        width: 48, height: 26, borderRadius: 99, 
+                        background: form.has_pcos ? '#a78bfa' : 'rgba(255,255,255,0.1)', 
+                        border: 'none', position: 'relative', cursor: 'pointer', transition: 'all 0.2s' 
+                      }}>
+                      <div style={{ width: 18, height: 18, background: '#fff', borderRadius: 99, position: 'absolute', top: 4, left: form.has_pcos ? 26 : 4, transition: 'all 0.2s' }} />
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -120,59 +138,88 @@ export default function Onboarding({ user, onComplete }) {
 
           {/* Step 2 — Diet & Allergies */}
           {step === 2 && (
-            <div>
-              <label style={labelStyle}>Diet Type</label>
-              {[['veg', '🥦', 'Vegetarian'], ['nonveg', '🍗', 'Non-Vegetarian'], ['vegan', '🌱', 'Vegan'], ['eggetarian', '🥚', 'Eggetarian']].map(([v, e, l]) => (
-                <button key={v} onClick={() => set('diet', v)} style={cardBtnStyle(form.diet === v)}>
-                  <span style={{ fontSize: 22 }}>{e}</span> {l}
-                  {form.diet === v && <span style={{ marginLeft: 'auto', color: '#4ade80' }}>✓</span>}
-                </button>
-              ))}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+              <div>
+                <label style={labelStyle}>DIETARY PREFERENCE</label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                  {[['veg', '🥦', 'Vegetarian'], ['nonveg', '🍗', 'Non-Veg'], ['vegan', '🌱', 'Vegan'], ['eggetarian', '🥚', 'Eggetarian']].map(([v, e, l]) => (
+                    <button key={v} onClick={() => set('diet', v)} style={cardBtnStyle(form.diet === v)}>
+                      <span style={{ fontSize: 22 }}>{e}</span> {l}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-              <label style={{ ...labelStyle, marginTop: 16 }}>Allergies (select all that apply)</label>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                {['Gluten', 'Dairy', 'Nuts', 'Eggs', 'Soy', 'Shellfish'].map(a => (
-                  <button key={a} onClick={() => toggleAllergy(a)}
-                    style={{ background: form.allergies.includes(a) ? '#f8717122' : '#21253a', border: `1px solid ${form.allergies.includes(a) ? '#f87171' : '#2d3148'}`, borderRadius: 8, padding: '6px 14px', color: form.allergies.includes(a) ? '#f87171' : '#94a3b8', cursor: 'pointer', fontSize: 13 }}>
-                    {a}
-                  </button>
-                ))}
+              <div>
+                <label style={labelStyle}>ANY ALLERGIES?</label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+                  {['Gluten', 'Dairy', 'Nuts', 'Eggs', 'Soy', 'Shellfish'].map(a => (
+                    <button key={a} onClick={() => toggleAllergy(a)}
+                      style={{ 
+                        background: form.allergies.includes(a) ? 'rgba(248, 113, 113, 0.1)' : 'rgba(255,255,255,0.03)', 
+                        border: `1px solid ${form.allergies.includes(a) ? '#f87171' : 'var(--border-color)'}`, 
+                        borderRadius: 12, 
+                        padding: '10px 20px', 
+                        color: form.allergies.includes(a) ? '#f87171' : 'var(--text-muted)', 
+                        cursor: 'pointer', 
+                        fontSize: 14,
+                        fontWeight: 700,
+                        transition: 'all 0.2s'
+                      }}>
+                      {a}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           )}
 
           {/* Step 3 — Mess Menu */}
-          {/* {step === 3 && (
-            <div>
-              <div style={{ color: '#94a3b8', fontSize: 13, marginBottom: 16 }}>Select dishes available in your hostel mess for each meal</div>
-              {['breakfast', 'lunch', 'dinner'].map(meal => (
-                <div key={meal} style={{ marginBottom: 20 }}>
-                  <div style={{ fontWeight: 700, color: '#f1f5f9', marginBottom: 8, textTransform: 'capitalize', fontSize: 15 }}>
-                    {meal === 'breakfast' ? '☀️' : meal === 'lunch' ? '🌤' : '🌙'} {meal}
-                  </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                    {foodItems.map(item => {
-                      const selected = form.mess_menu[meal].includes(item)
-                      return (
-                        <button key={item} onClick={() => toggleMessItem(meal, item)}
-                          style={{ background: selected ? '#4ade8022' : '#21253a', border: `1px solid ${selected ? '#4ade80' : '#2d3148'}`, borderRadius: 8, padding: '5px 10px', color: selected ? '#4ade80' : '#94a3b8', cursor: 'pointer', fontSize: 12, fontWeight: selected ? 600 : 400 }}>
-                          {selected ? '✓ ' : ''}{item}
-                        </button>
-                      )
-                    })}
-                  </div>
-                </div>
-              ))}
+          {step === 3 && (
+            <div style={{ textAlign: 'center', padding: '20px 0' }}>
+              <div style={{ fontSize: 48, marginBottom: 20 }}>🍽️</div>
+              <div style={{ color: 'var(--text-primary)', fontWeight: 800, fontSize: 18, marginBottom: 12 }}>Almost there!</div>
+              <div style={{ color: 'var(--text-muted)', fontSize: 14, lineHeight: 1.6 }}>
+                You can set up your daily hostel mess menu in the <b>Daily Log</b> section later. This helps you log meals with a single tap!
+              </div>
             </div>
-          )} */}
+          )}
         </div>
 
         {/* Buttons */}
-        <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
-          {step > 0 && <button onClick={() => setStep(s => s - 1)} style={{ flex: 1, background: '#1a1d27', border: '1px solid #2d3148', borderRadius: 12, padding: 14, color: '#94a3b8', fontSize: 15, cursor: 'pointer' }}>← Back</button>}
+        <div style={{ display: 'flex', gap: 12, marginTop: 32 }}>
+          {step > 0 && (
+            <button onClick={() => setStep(s => s - 1)} 
+              style={{ 
+                flex: 1, 
+                background: 'rgba(255,255,255,0.03)', 
+                border: '1px solid var(--border-color)', 
+                borderRadius: 14, 
+                padding: '16px', 
+                color: 'var(--text-muted)', 
+                fontSize: 15, 
+                fontWeight: 800,
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}>
+              ← BACK
+            </button>
+          )}
           <button onClick={() => step < steps.length - 1 ? setStep(s => s + 1) : submit()} disabled={loading}
-            style={{ flex: 2, background: loading ? '#2d3148' : 'linear-gradient(135deg, #4ade80, #22c55e)', border: 'none', borderRadius: 12, padding: 14, color: loading ? '#94a3b8' : '#000', fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer' }}>
-            {loading ? 'Saving...' : step < steps.length - 1 ? 'Continue →' : "Let's Go! 🚀"}
+            style={{ 
+              flex: 2, 
+              background: loading ? 'var(--border-color)' : 'var(--accent-green)', 
+              border: 'none', 
+              borderRadius: 14, 
+              padding: '16px', 
+              color: '#000', 
+              fontSize: 15, 
+              fontWeight: 900, 
+              cursor: loading ? 'not-allowed' : 'pointer',
+              boxShadow: loading ? 'none' : '0 10px 15px -3px rgba(74, 222, 128, 0.2)',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+            }}>
+            {loading ? 'SAVING...' : step < steps.length - 1 ? 'CONTINUE →' : "COMPLETE SETUP 🚀"}
           </button>
         </div>
       </div>

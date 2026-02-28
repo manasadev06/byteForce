@@ -7,6 +7,7 @@ import DailyLog from './pages/DailyLog'
 import GapsPlanner from './pages/GapsPlanner'
 import Swaps from './pages/Swaps'
 import Analytics from './pages/Analytics'
+import Profile from './pages/Profile'
 import Sidebar from './components/Sidebar'
 
 export default function App() {
@@ -16,14 +17,11 @@ export default function App() {
   const [page, setPage] = useState('dashboard')
 
   useEffect(() => {
-    // Load Google Fonts
     const link = document.createElement('link')
     link.rel = 'stylesheet'
     link.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap'
     document.head.appendChild(link)
-    document.body.style.margin = '0'
-    document.body.style.padding = '0'
-    document.body.style.background = '#0f1117'
+    document.body.style.background = 'var(--bg-color)'
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
@@ -41,54 +39,49 @@ export default function App() {
   }, [])
 
   const fetchProfile = async (userId) => {
-  try {
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId)
-      .maybeSingle() // ← change from .single() to .maybeSingle()
-    
+      .maybeSingle()
+
     if (error) {
       console.error('Profile fetch error:', error)
       setProfile(null)
     } else {
-      setProfile(data) // data will be null if no profile exists → shows onboarding
+      setProfile(data)
     }
-  } catch(e) {
-    console.error(e)
-    setProfile(null)
+    setLoading(false)
   }
-  setLoading(false)
-}
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', background: '#0f1117', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'DM Sans', sans-serif" }}>
+      <div style={{ minHeight: '100vh', background: 'var(--bg-color)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 48, marginBottom: 12 }}>🥗</div>
-          <div style={{ color: '#4ade80', fontSize: 18, fontWeight: 700 }}>NutriMess</div>
-          <div style={{ color: '#475569', fontSize: 13, marginTop: 6 }}>Loading...</div>
+          <div style={{ color: 'var(--accent-green)', fontSize: 18, fontWeight: 900 }}>NutriMess</div>
+          <div style={{ color: 'var(--text-muted)', fontSize: 13, marginTop: 6 }}>Loading...</div>
         </div>
       </div>
     )
   }
 
   if (!session) return <Login />
-
   if (!profile) return <Onboarding user={session.user} onComplete={() => fetchProfile(session.user.id)} />
 
   const pages = {
     dashboard: <Dashboard profile={profile} user={session.user} />,
-    daily: <DailyLog profile={profile} user={session.user} />,
+    daily: <DailyLog profile={profile} user={session.user} onProfileUpdate={() => fetchProfile(session.user.id)} />,
     gaps: <GapsPlanner profile={profile} user={session.user} />,
-    swaps: <Swaps profile={profile} user={session.user} />,
+    swaps: <Swaps profile={profile} user={session.user} setPage={setPage} />,
     analytics: <Analytics profile={profile} user={session.user} />,
+    profile: <Profile profile={profile} user={session.user} onUpdate={() => fetchProfile(session.user.id)} />,
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#0f1117', fontFamily: "'DM Sans', sans-serif" }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-color)' }}>
       <Sidebar active={page} setPage={setPage} profile={profile} />
-      <div style={{ marginLeft: 220, flex: 1, minHeight: '100vh' }}>
+      <div style={{ marginLeft: 240, flex: 1, minHeight: '100vh', position: 'relative' }}>
         {pages[page]}
       </div>
     </div>

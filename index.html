@@ -5,8 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NutriMess — Smart Nutrition for Hostel Students</title>
     <style>
-      * { box-sizing: border-box; margin: 0; padding: 0; }
-      body { background: #0f1117; }
+      :root {
+        --bg-color: #0f1117;
+        --card-bg: #1a1d27;
+        --border-color: #2d3148;
+        --accent-green: #4ade80;
+        --text-primary: #ffffff;
+        --text-muted: #94a3b8;
+        --font-dm: 'DM Sans', sans-serif;
+      }
+      * { 
+        box-sizing: border-box; 
+        margin: 0; 
+        padding: 0; 
+        font-family: var(--font-dm);
+      }
+      body { 
+        background: var(--bg-color); 
+        color: var(--text-primary);
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg-color);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #3d425c;
+      }
     </style>
   </head>
   <body>
